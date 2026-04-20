@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>MediAccess | Patient Access Management & Analytics</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #0b2f5c, #1c9b9a);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        /* landing card */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background: rgba(255,255,255,0.96);
+            border-radius: 32px;
+            box-shadow: 0 25px 45px rgba(0,0,0,0.2);
+            overflow: hidden;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+        header {
+            background: linear-gradient(115deg, #0a2b4e, #1b9e9e);
+            color: white;
+            padding: 30px 25px;
+            text-align: center;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .logo-icon {
+            width: 80px;
+            height: 80px;
+            background: white;
+            border-radius: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: #0a2b4e;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+        }
+        .logo-text h1 { font-size: 2.4rem; font-weight: 700; letter-spacing: -0.5px; }
+        .main-content { padding: 40px 30px; text-align: center; }
+        .system-info {
+            background: #eef4ff;
+            border-radius: 24px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: left;
+            border-left: 6px solid #0a2b4e;
+        }
+        .info-grid { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 15px; }
+        .info-item { display: flex; align-items: center; gap: 12px; background: white; padding: 8px 18px; border-radius: 40px; }
+        .login-buttons {
+            display: grid;
+            grid-template-columns: repeat(4,1fr);
+            gap: 25px;
+            margin-top: 30px;
+        }
+        .login-btn {
+            background: white;
+            border: none;
+            border-radius: 28px;
+            padding: 28px 15px;
+            cursor: pointer;
+            box-shadow: 0 12px 22px rgba(0,0,0,0.08);
+            transition: all 0.25s;
+            border-top: 5px solid;
+        }
+        .login-btn:nth-child(1) { border-top-color: #0a2b4e; }
+        .login-btn:nth-child(2) { border-top-color: #1b9e9e; }
+        .login-btn:nth-child(3) { border-top-color: #e67e22; }
+        .login-btn:nth-child(4) { border-top-color: #2c7a4d; }
+        .login-btn:hover { transform: translateY(-6px); box-shadow: 0 22px 30px rgba(0,0,0,0.12); }
+        .btn-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            margin-bottom: 16px;
+        }
+        .btn-1 .btn-icon { background: #0a2b4e; }
+        .btn-2 .btn-icon { background: #1b9e9e; }
+        .btn-3 .btn-icon { background: #e67e22; }
+        .btn-4 .btn-icon { background: #2c7a4d; }
+        .login-btn h3 { font-size: 1.5rem; margin: 12px 0 6px; }
+        /* modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top:0; left:0;
+            width:100%; height:100%;
+            background: rgba(0,0,0,0.65);
+            align-items: center;
+            justify-content: center;
+            z-index: 1100;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 32px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 30px 45px rgba(0,0,0,0.3);
+        }
+        .modal-header {
+            background: linear-gradient(95deg, #0a2b4e, #1b9e9e);
+            padding: 20px 25px;
+            border-radius: 32px 32px 0 0;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+        }
+        .form-group { margin-bottom: 18px; text-align: left; }
+        .form-group input, .form-group select { width: 100%; padding: 12px 14px; border-radius: 20px; border: 1px solid #ccc; }
+        .modal-btn {
+            background: #0a2b4e;
+            color: white;
+            width: 100%;
+            padding: 14px;
+            border-radius: 40px;
+            font-weight: bold;
+            margin-top: 12px;
+            cursor: pointer;
+            border: none;
+        }
+        .demo-users { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 12px; }
+        .demo-user { background: #eef2fa; padding: 8px 14px; border-radius: 40px; font-size: 13px; cursor: pointer; }
+        /* dashboard common */
+        .user-header {
+            background: linear-gradient(115deg, #103a5e, #198c8c);
+            border-radius: 32px;
+            padding: 22px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            color: white;
+            margin-bottom: 28px;
+        }
+        .avatar { font-size: 48px; background: rgba(255,255,255,0.2); border-radius: 60px; padding: 10px; margin-right: 20px; }
+        .logout-btn, .back-home-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            color: white;
+            font-weight: 600;
+            margin-left: 12px;
+        }
+        .admin-nav { display: flex; gap: 20px; background: white; padding: 12px 20px; border-radius: 60px; margin-bottom: 25px; justify-content: center; }
+        .admin-nav-btn { background: #eef2fa; border: none; padding: 12px 28px; border-radius: 40px; font-weight: 600; cursor: pointer; }
+        /* validator console */
+        .validator-container { background: #ffffffdd; backdrop-filter: blur(8px); border-radius: 36px; padding: 28px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+        .dashboard-grid { display: grid; grid-template-columns: 340px 1fr; gap: 28px; }
+        .report-item { background: white; border-radius: 24px; padding: 14px; margin-bottom: 12px; display: flex; gap: 14px; align-items: center; cursor: pointer; border: 1px solid #cde1ff; transition: 0.1s; }
+        .report-item:hover { background: #eef4ff; transform: scale(0.99); }
+        .verify-badge { padding: 6px 18px; border-radius: 60px; font-weight: 600; }
+        .verify-badge.approved { background: #2e7d32; color: white; }
+        .verify-badge.rejected { background: #c62828; color: white; }
+        .verify-badge.pending { background: #f1c40f; color: #2c3e50; }
+        .info-box { background: #f8fcff; border-radius: 24px; padding: 18px; margin-bottom: 18px; border: 1px solid #cde0ff; }
+        .action-buttons { display: flex; gap: 20px; margin-top: 20px; }
+        .approve-btn, .reject-btn { flex:1; padding: 14px; border-radius: 60px; font-weight: bold; border: none; color: white; cursor: pointer; }
+        .approve-btn { background: #2e7d32; }
+        .reject-btn { background: #c62828; }
+        /* admin report */
+        .admin-report-container { background: white; border-radius: 32px; padding: 28px; box-shadow: 0 12px 28px rgba(0,0,0,0.05); }
+        .summary-stats { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 25px; }
+        .stat-box { background: #f0f7ff; border-radius: 20px; padding: 16px 24px; flex:1; min-width: 160px; }
+        .table-container { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 14px 12px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+        .status-badge { background: #2e7d32; color: white; padding: 4px 14px; border-radius: 40px; font-size: 0.8rem; }
+        /* analyst */
+        .analyst-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap: 22px; margin: 25px 0; }
+        .analyst-card { background: white; border-radius: 28px; padding: 20px; box-shadow: 0 8px 18px #d9e4f0; }
+        .card-value { font-size: 2.3rem; font-weight: 700; color: #0a2b4e; }
+        .charts-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 28px; margin: 25px 0; }
+        .chart-card { background: #fafdff; border-radius: 28px; padding: 20px; border: 1px solid #cfe2ff; }
+        .chart-bars { display: flex; align-items: flex-end; gap: 14px; height: 200px; margin-top: 20px; }
+        .bar { background: #0a2b4e; width: 100%; border-radius: 12px 12px 0 0; transition: 0.2s; }
+        .status-graph .graph-item { display: flex; align-items: center; gap: 12px; margin: 12px 0; }
+        .graph-bar-container { flex:1; height: 32px; background: #e2e8f0; border-radius: 20px; overflow: hidden; }
+        .graph-bar { height: 100%; border-radius: 20px; display: flex; align-items: center; justify-content: flex-end; padding-right: 12px; color: white; font-weight: bold; }
+        .export-option { background: #eef2fa; border: none; padding: 10px 24px; border-radius: 40px; font-weight: 600; cursor: pointer; margin: 6px; }
+        .notification { position: fixed; top: 20px; right: 20px; background: #2e7d32; color: white; padding: 14px 24px; border-radius: 60px; z-index: 1300; display: none; align-items: center; gap: 12px; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        @media (max-width: 800px) { .login-buttons { grid-template-columns: 1fr 1fr; } .dashboard-grid { grid-template-columns: 1fr; } .charts-grid { grid-template-columns: 1fr; } }
+        .run-btn { position: fixed; bottom: 30px; right: 30px; background: #0a2b4e; color: white; width: 64px; height: 64px; border-radius: 60px; border: none; font-size: 28px; cursor: pointer; box-shadow: 0 8px 20px rgba(0,0,0,0.2); z-index: 999; }
+        .suggestion-modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 1400; }
+        .suggestion-content { background: white; border-radius: 40px; max-width: 500px; width: 90%; padding: 30px; text-align: center; }
+        .option-card { border: 2px solid #e2e8f0; border-radius: 28px; padding: 14px; margin: 10px; cursor: pointer; display: inline-block; width: 45%; }
+        .option-card.selected { border-color: #0a2b4e; background: #eef4ff; }
+    </style>
+</head>
+<body>
+<div id="landingPage" class="container">
+    <header><div class="logo"><div class="logo-icon"><i class="fas fa-hospital-user"></i></div><div class="logo-text"><h1>MediAccess Hub</h1><p>intelligent patient access & analytics</p></div></div></header>
+    <div class="main-content">
+        <h2>Secure Healthcare Management Portal</h2>
+        <div class="system-info"><h4><i class="fas fa-shield-alt"></i> Integrated Roles</h4><div class="info-grid"><div class="info-item"><i class="fas fa-user-injured"></i> Patient</div><div class="info-item"><i class="fas fa-user-check"></i> Validator</div><div class="info-item"><i class="fas fa-user-shield"></i> Admin</div><div class="info-item"><i class="fas fa-chart-line"></i> Analyst</div></div></div>
+        <div class="login-buttons">
+            <button class="login-btn btn-1" onclick="showModal('patientModal')"><div class="btn-icon"><i class="fas fa-user-injured"></i></div><h3>Patient</h3><p>apply / track status</p></button>
+            <button class="login-btn btn-2" onclick="showModal('validatorModal')"><div class="btn-icon"><i class="fas fa-user-check"></i></div><h3>Validator</h3><p>review & decide</p></button>
+            <button class="login-btn btn-3" onclick="showModal('adminModal')"><div class="btn-icon"><i class="fas fa-user-shield"></i></div><h3>Admin</h3><p>approved reports</p></button>
+            <button class="login-btn btn-4" onclick="showModal('analystModal')"><div class="btn-icon"><i class="fas fa-chart-bar"></i></div><h3>Analyst</h3><p>insights & kpis</p></button>
+        </div>
+    </div>
+    <footer style="text-align:center; padding:20px; background:#f8fafc;">© 2025 MediAccess — secure digital health</footer>
+</div>
+
+<div id="dashboardPage" style="display:none; width:100%;"><div class="user-header"><div class="user-info"><div class="avatar"><i class="fas fa-user-circle"></i></div><div class="welcome-text"><h1 id="welcomeName"></h1><p><span id="userIDDisplay"></span> · <span id="userEmailDisplay"></span></p></div></div><div><button class="back-home-btn" onclick="goToLanding()"><i class="fas fa-home"></i> Home</button><button class="logout-btn" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</button></div></div><div id="adminNav" style="display:none;" class="admin-nav"><button class="admin-nav-btn active" onclick="showAdminReport()"><i class="fas fa-file-alt"></i> Admin Report</button></div><div id="dynamicContent"></div></div>
+
+<!-- Modals: Patient, Validator, Admin, Analyst -->
+<div id="patientModal" class="modal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-user-injured"></i> Patient Login</h3><span class="close-modal" onclick="closeModal('patientModal')">&times;</span></div><div class="modal-body"><form id="patientForm" onsubmit="loginPatient(event)"><div class="form-group"><label>Email</label><input type="email" id="patientEmail" value="patient1@example.com"></div><div class="form-group"><label>Password</label><input type="password" id="patientPassword" value="pass"></div><button type="submit" class="modal-btn">Login</button></form><div class="demo-login"><p>Demo accounts:</p><div class="demo-users"><div class="demo-user" onclick="fillPatient('patient1@example.com')">📧 patient1@example.com (new)</div><div class="demo-user" onclick="fillPatient('patient2@example.com')">📧 patient2@example.com (submitted)</div><div class="demo-user" onclick="fillPatient('patient4@example.com')">📧 patient4@example.com (approved)</div></div></div></div></div></div>
+<div id="validatorModal" class="modal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-user-check"></i> Validator</h3><span class="close-modal" onclick="closeModal('validatorModal')">&times;</span></div><div class="modal-body"><form onsubmit="loginValidator(event)"><div class="form-group"><label>Validator ID</label><input id="validatorId" value="VAL001"></div><div class="form-group"><label>Password</label><input type="password" id="validatorPassword" value="pass"></div><button class="modal-btn">Access Console</button></form></div></div></div>
+<div id="adminModal" class="modal"><div class="modal-content"><div class="modal-header"><h3><i class="fas fa-user-shield"></i> Admin</h3><span class="close-modal" onclick="closeModal('adminModal')">&times;</span></div><div class="modal-body"><form onsubmit="loginAdmin(event)"><div class="form-group"><label>Username</label><input id="adminUsername" value="admin"></div><div class="form-group"><label>Password</label><input type="password" id="adminPassword" value="admin123"></div><button class="modal-btn">Login</button></form></div></div></div>
+<div id="analystModal" class="modal"><div class="modal-content" style="max-width:1300px;"><div class="modal-header"><h3><i class="fas fa-chart-line"></i> Data Analyst Dashboard</h3><span class="close-modal" onclick="closeModal('analystModal')">&times;</span></div><div class="modal-body" id="analystDashboardContainer" style="max-height:75vh; overflow-y:auto;"></div></div></div>
+<div id="suggestionModal" class="suggestion-modal"><div class="suggestion-content"><div id="suggestionIcon" class="suggestion-icon"><i class="fas fa-balance-scale"></i></div><div id="suggestionTitle" style="font-size:28px; font-weight:700;">Review Decision</div><div id="suggestionText" style="margin:15px 0;"></div><div id="suggestionOptions" class="suggestion-options"></div><input id="suggestionNote" class="suggestion-note" placeholder="Add note (optional)"><div class="suggestion-actions"><button id="cancelSuggestionBtn" class="suggestion-btn secondary">Cancel</button><button id="confirmSuggestionBtn" class="suggestion-btn primary">Confirm</button></div></div></div>
+<div id="notification" class="notification"><i class="fas fa-bell"></i><span id="notificationText"></span></div>
+<button class="run-btn" onclick="runDemoGuide()"><i class="fas fa-play"></i></button>
+
+<script>
+    // ------------------- DATA STORE (persistent via localStorage) -------------------
+    let submissions = JSON.parse(localStorage.getItem('pam_submissions')) || {
+        'patient1@example.com': { id:'APP001', name:'New User', patientId:'MCP241001', stage:'new', email:'patient1@example.com' },
+        'patient2@example.com': { id:'APP12456', name:'Rajan Menon', patientId:'MCP242101', stage:'submitted', submittedDate:'24 Feb 2025', hospital:'City Hospital', doctor:'Dr. Priya', billAmount:'₹48,500', age:'45', diseases:'Diabetes', address:'Bangalore', aadhar:'123412341234', pan:'ABCDE1234F', phone:'9876543210', maritalStatus:'Married', income:'550000', hospitalName:'City Hospital', doctorName:'Priya Sharma', admissionDate:'2025-02-10', dischargeDate:'2025-02-15', department:'Medicine', wardType:'General', paymentStatus:'Pending', bill:{total:48500, roomCharges:15000, medicineCost:12000, doctorFees:8000, labCharges:5000, icuCharges:0, otCharges:0, otherCharges:8500, insurance:0, discount:0} },
+        'patient4@example.com': { id:'APP12458', name:'Karthik Raja', patientId:'MCP249888', stage:'approved', approvedDate:'22 Feb 2025', hospital:'Fortis', doctor:'Dr.Meera', billAmount:'₹95,000', age:'55', diseases:'Heart', income:'1800000', hospitalName:'Fortis', doctorName:'Meera', admissionDate:'2025-02-15', dischargeDate:'2025-02-22', department:'Cardiology', wardType:'ICU', bill:{total:95000, roomCharges:25000, medicineCost:20000, doctorFees:15000, labCharges:10000, icuCharges:15000, otherCharges:10000, insurance:0, discount:0} }
+    };
+    let validatorReports = JSON.parse(localStorage.getItem('pam_validator_reports')) || [];
+    function syncValidatorReports() { localStorage.setItem('pam_validator_reports', JSON.stringify(validatorReports)); localStorage.setItem('pam_submissions', JSON.stringify(submissions)); }
+    function buildReportsFromSubmissions() { for(let email in submissions) { let s=submissions[email]; if(s.stage !== 'new' && !validatorReports.find(r=>r.patientEmail===email)) { validatorReports.push({ id:Date.now()+Math.random(), patientID:s.patientId, name:s.name, age:s.age, diseases:s.diseases, address:s.address, aadhar:s.aadhar, pan:s.pan, phone:s.phone, maritalStatus:s.maritalStatus, income:Number(s.income)||0, hospitalName:s.hospitalName, hospitalPhone:s.hospitalPhone, doctorName:s.doctorName, admissionDate:s.admissionDate, dischargeDate:s.dischargeDate, department:s.department, wardType:s.wardType, paymentStatus:s.paymentStatus, bill:s.bill, timestamp:new Date().toISOString(), validatorDecision:s.stage==='approved'?'approved':s.stage==='rejected'?'rejected':null, patientEmail:email, stage:s.stage }); } } syncValidatorReports(); }
+    buildReportsFromSubmissions();
+
+    let currentUser = { email: null, role: null };
+    function saveSession(email,role){ currentUser={email,role}; localStorage.setItem('pam_session',JSON.stringify({email,role})); }
+    function loadSession(){ let s=localStorage.getItem('pam_session'); if(s){ let d=JSON.parse(s); currentUser=d; showDashboard(); } else showLanding(); }
+    function showLanding(){ document.getElementById('landingPage').style.display='block'; document.getElementById('dashboardPage').style.display='none'; }
+    function showDashboard(){ document.getElementById('landingPage').style.display='none'; document.getElementById('dashboardPage').style.display='block'; document.getElementById('welcomeName').innerText=`Welcome ${currentUser.email?.split('@')[0]||'User'}`; document.getElementById('userEmailDisplay').innerText=currentUser.email; document.getElementById('userIDDisplay').innerText=currentUser.role==='validator'?'Validator ID: VAL001':currentUser.role==='admin'?'Administrator':'Patient'; if(currentUser.role==='admin'){ document.getElementById('adminNav').style.display='flex'; showAdminReport(); } else { document.getElementById('adminNav').style.display='none'; showRoleContent(); } }
+    function showRoleContent(){ if(currentUser.role==='validator') renderValidatorConsole(); else if(currentUser.role==='patient') renderPatientArea(); }
+    function renderPatientArea(){ let sub=submissions[currentUser.email]; if(!sub || sub.stage==='new') renderApplicationForm(); else renderStatusPage(sub); }
+    function renderApplicationForm(){ document.getElementById('dynamicContent').innerHTML=`<div class="admin-report-container"><h2><i class="fas fa-file-medical"></i> New Application</h2><div id="appFormHtml"></div></div>`; const html=`<div style="display:grid; gap:15px;"><input id="fullName" placeholder="Full Name"><input id="age" placeholder="Age"><input id="diseases" placeholder="Diseases"><input id="annualIncome" placeholder="Annual Income (₹)"><input id="hospitalName" placeholder="Hospital"><input id="doctorName" placeholder="Doctor"><input id="billTotal" placeholder="Bill Amount (₹)" type="number"><button id="submitAppBtn" class="modal-btn">Submit Application</button></div>`; document.querySelector('#appFormHtml').innerHTML=html; document.getElementById('submitAppBtn').onclick=()=>{ let name=document.getElementById('fullName').value||'Anonymous'; let bill=Number(document.getElementById('billTotal').value)||25000; let newSub={ id:'APP'+Math.floor(Math.random()*100000), name, patientId:'MCP'+Date.now().toString().slice(-6), stage:'submitted', submittedDate:new Date().toLocaleDateString(), hospital:document.getElementById('hospitalName').value||'General Hospital', doctor:'Dr. '+ (document.getElementById('doctorName').value||'Consultant'), billAmount:'₹'+bill, age:document.getElementById('age').value||'30', diseases:document.getElementById('diseases').value||'None', income:Number(document.getElementById('annualIncome').value)||500000, hospitalName:document.getElementById('hospitalName').value, doctorName:document.getElementById('doctorName').value, bill:{total:bill, roomCharges:0, medicineCost:0, doctorFees:0, labCharges:0, icuCharges:0, otCharges:0, otherCharges:bill, insurance:0, discount:0}, paymentStatus:'Pending' }; submissions[currentUser.email]=newSub; validatorReports.push({ id:Date.now(), patientID:newSub.patientId, name, age:newSub.age, diseases:newSub.diseases, income:newSub.income, hospitalName:newSub.hospitalName, doctorName:newSub.doctorName, bill:newSub.bill, validatorDecision:null, patientEmail:currentUser.email, stage:'submitted', timestamp:new Date().toISOString() }); syncValidatorReports(); showNotification('Application submitted!','success'); renderPatientArea(); }; }
+    function renderStatusPage(sub){ let isRejected=sub.stage==='rejected', isApproved=sub.stage==='approved', isReview=sub.stage==='review'||sub.stage==='submitted'; document.getElementById('dynamicContent').innerHTML=`<div class="admin-report-container"><h2>Application Status</h2><div style="background:#f0f9ff; border-radius:28px; padding:20px;"><i class="fas ${isApproved?'fa-check-circle green':isRejected?'fa-times-circle red':'fa-clock'}"></i> <strong>${isApproved?'APPROVED':isRejected?'REJECTED':'UNDER REVIEW'}</strong><p>${isApproved?'Your claim is approved. Insurance covers 50% of bill.':isRejected?'Application rejected after review.':sub.stage==='submitted'?'Pending validator review.':''}</p><hr><div><strong>Name:</strong> ${sub.name}<br><strong>Bill:</strong> ${sub.billAmount||'₹'+sub.bill?.total}<br><strong>Hospital:</strong> ${sub.hospital}</div></div></div>`; }
+    function renderValidatorConsole(){ let html=`<div class="validator-container"><div class="dashboard-grid"><div class="left-panel"><h3><i class="fas fa-list"></i> Pending / All reports</h3><div id="reportList"></div></div><div class="right-panel" id="validatorDetailPanel"><div class="info-box">Select a report to review</div></div></div></div>`; document.getElementById('dynamicContent').innerHTML=html; refreshReportList(); }
+    function refreshReportList(){ let container=document.getElementById('reportList'); if(!container)return; container.innerHTML=''; validatorReports.forEach(r=>{ let div=document.createElement('div'); div.className='report-item'; div.innerHTML=`<i class="fas fa-user-circle fa-2x"></i><div><b>${r.name||'Unknown'}</b><br>${r.patientID}<br>${r.validatorDecision? (r.validatorDecision==='approved'?'✅ approved':'❌ rejected'):'⏳ pending'}</div>`; div.onclick=()=>showValidatorDetail(r.id); container.appendChild(div); }); }
+    function showValidatorDetail(id){ let r=validatorReports.find(x=>x.id==id); if(!r)return; let detailDiv=document.getElementById('validatorDetailPanel'); if(!detailDiv)return; let totalBill=r.bill?.total||0; let insurance50=Math.round(totalBill*0.5); let patientPay=totalBill-insurance50; detailDiv.innerHTML=`<div class="info-box"><h3>${r.name} (ID: ${r.patientID})</h3><p>Age: ${r.age} | Income: ₹${r.income?.toLocaleString()}<br>Diseases: ${r.diseases||'N/A'}<br>Hospital: ${r.hospitalName}<br>Total Bill: ₹${totalBill.toLocaleString()}<br>Insurance(50%): ₹${insurance50.toLocaleString()}<br>Patient Pay: ₹${patientPay.toLocaleString()}</p><div class="action-buttons"><button class="approve-btn" id="valApprove">✅ Approve</button><button class="reject-btn" id="valReject">❌ Reject</button></div><div id="valMsg"></div></div>`; document.getElementById('valApprove').onclick=()=>openSuggestionModal(r,'approve'); document.getElementById('valReject').onclick=()=>openSuggestionModal(r,'reject'); }
+    function openSuggestionModal(report,action){ let modal=document.getElementById('suggestionModal'); let textDiv=document.getElementById('suggestionText'); let optsDiv=document.getElementById('suggestionOptions'); let income=Number(report.income)||0; let total=report.bill?.total||0; let ratio=(total/income*100).toFixed(1); let suggestion= income<300000?`Low income (₹${income.toLocaleString()}) → recommend approval`:(income>800000?`High income → reject recommended`:`Moderate income → review carefully. Bill/income ${ratio}%`); textDiv.innerText=`${action==='approve'?'APPROVAL SUGGESTION: '+suggestion:'REJECTION ANALYSIS: '+suggestion} \n Please confirm.`; optsDiv.innerHTML=`<div class="option-card" data-opt="confirm">✓ Confirm ${action}</div><div class="option-card" data-opt="addnote">📝 Add note & confirm</div>`; let selected='confirm'; document.querySelectorAll('.option-card').forEach(c=>{c.onclick=()=>{selected=c.dataset.opt; document.querySelectorAll('.option-card').forEach(c2=>c2.classList.remove('selected')); c.classList.add('selected');};c.classList.remove('selected');}); document.getElementById('confirmSuggestionBtn').onclick=()=>{ let note=document.getElementById('suggestionNote').value; report.validatorDecision=action; report.paymentStatus=action==='approve'?'Approved':'Rejected'; if(action==='approve'){ report.stage='approved'; let sub=submissions[report.patientEmail]; if(sub){ sub.stage='approved'; sub.approvedDate=new Date().toLocaleDateString(); sub.paymentStatus='Approved'; } } else { report.stage='rejected'; if(submissions[report.patientEmail]) submissions[report.patientEmail].stage='rejected'; } syncValidatorReports(); showNotification(`Report ${action}d.`); modal.style.display='none'; refreshReportList(); if(report.id)showValidatorDetail(report.id); }; document.getElementById('cancelSuggestionBtn').onclick=()=>{ modal.style.display='none'; }; modal.style.display='flex'; }
+    function showAdminReport(){ let approved=validatorReports.filter(r=>r.validatorDecision==='approved'||r.stage==='approved'); let totalBill=approved.reduce((s,r)=>s+(r.bill?.total||0),0); let totalInsurance=Math.round(totalBill*0.5); let totalPatientPay=totalBill-totalInsurance; let html=`<div class="admin-report-container"><h2>📋 Approved Claims (50% insurance rule)</h2><div class="summary-stats"><div class="stat-box">✅ Approved: ${approved.length}</div><div class="stat-box">💰 Total Bill: ₹${totalBill.toLocaleString()}</div><div class="stat-box">🛡️ Insurance: ₹${totalInsurance.toLocaleString()}</div><div class="stat-box">👤 Patient: ₹${totalPatientPay.toLocaleString()}</div></div><div class="table-container"><table><thead><tr><th>Patient</th><th>ID</th><th>Bill</th><th>Insurance(50%)</th><th>Patient Pay</th></tr></thead><tbody>${approved.map(r=>`<tr><td>${r.name}</td><td>${r.patientID}</td><td>₹${(r.bill?.total||0).toLocaleString()}</td><td>₹${Math.round((r.bill?.total||0)*0.5).toLocaleString()}</td><td>₹${Math.round((r.bill?.total||0)*0.5).toLocaleString()}</td></tr>`).join('')||'<tr><td colspan="5">No approved reports</td></tr>'}</tbody></table></div><button class="export-option" onclick="exportApprovedCSV()"><i class="fas fa-download"></i> Export CSV</button></div>`; document.getElementById('dynamicContent').innerHTML=html; }
+    function exportApprovedCSV(){ let approved=validatorReports.filter(r=>r.validatorDecision==='approved'); let csv="Patient Name,ID,Bill Amount,Insurance(50%),Patient Pay\n"+approved.map(r=>{let b=r.bill?.total||0; return `"${r.name}",${r.patientID},${b},${Math.round(b*0.5)},${Math.round(b*0.5)}`;}).join("\n"); let blob=new Blob([csv],{type:"text/csv"}); let a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download="approved_reports.csv"; a.click(); }
+    function showAnalystFull(){ let reports=validatorReports; let total=reports.length; let approved=reports.filter(r=>r.validatorDecision==='approved').length; let pending=reports.filter(r=>!r.validatorDecision).length; let rejected=reports.filter(r=>r.validatorDecision==='rejected').length; let totalBill=reports.reduce((s,r)=>s+(r.bill?.total||0),0); let monthly={}; reports.forEach(r=>{ let month=r.timestamp?new Date(r.timestamp).toLocaleString('default',{month:'short'}):'Mar'; monthly[month]=(monthly[month]||0)+1; }); let html=`<div class="analyst-container"><div class="analyst-grid"><div class="analyst-card"><div class="card-value">${total}</div><div>Total Patients</div></div><div class="analyst-card"><div class="card-value">${approved}</div><div>Approved</div></div><div class="analyst-card"><div class="card-value">${pending}</div><div>Pending</div></div><div class="analyst-card"><div class="card-value">₹${(totalBill/1000).toFixed(0)}K</div><div>Total Bill Value</div></div></div><div class="charts-grid"><div class="chart-card"><h3>Status Distribution</h3><div class="status-graph"><div class="graph-item"><span>Approved</span><div class="graph-bar-container"><div class="graph-bar approved" style="width:${total?(approved/total*100):0}%; background:#2e7d32;">${Math.round(approved/total*100)}%</div></div></div><div class="graph-item"><span>Pending</span><div class="graph-bar-container"><div class="graph-bar pending" style="width:${total?(pending/total*100):0}%; background:#f39c12;">${Math.round(pending/total*100)}%</div></div></div><div class="graph-item"><span>Rejected</span><div class="graph-bar-container"><div class="graph-bar rejected" style="width:${total?(rejected/total*100):0}%; background:#c62828;">${Math.round(rejected/total*100)}%</div></div></div></div></div><div class="chart-card"><h3>Income vs Approval Insight</h3><p>Low-income patients (< ₹3L) → approval priority</p><i class="fas fa-chart-line fa-3x" style="color:#0a2b4e;"></i></div></div><button class="export-option" onclick="exportAnalyticsCSV()">Export Analytics CSV</button></div>`; document.getElementById('analystDashboardContainer').innerHTML=html; }
+    function exportAnalyticsCSV(){ let reports=validatorReports; let csv="Name,ID,Status,Bill Amount,Income\n"+reports.map(r=>`${r.name},${r.patientID},${r.validatorDecision||'pending'},${r.bill?.total||0},${r.income||0}`).join("\n"); let blob=new Blob([csv],{type:"text/csv"}); let a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download="analytics_data.csv"; a.click(); }
+    function loginPatient(e){ e.preventDefault(); let email=document.getElementById('patientEmail').value.trim(); if(email){ saveSession(email,'patient'); closeModal('patientModal'); showNotification(`Welcome ${email}`); showDashboard(); } }
+    function loginValidator(e){ e.preventDefault(); saveSession('validator@med.com','validator'); closeModal('validatorModal'); showDashboard(); }
+    function loginAdmin(e){ e.preventDefault(); saveSession('admin@med.com','admin'); closeModal('adminModal'); showDashboard(); }
+    function fillPatient(email){ document.getElementById('patientEmail').value=email; }
+    function showModal(id){ closeAllModals(); document.getElementById(id).style.display='flex'; if(id==='analystModal') showAnalystFull(); }
+    function closeModal(id){ let el=document.getElementById(id); if(el)el.style.display='none'; }
+    function closeAllModals(){ document.querySelectorAll('.modal').forEach(m=>m.style.display='none'); document.getElementById('suggestionModal').style.display='none'; }
+    function goToLanding(){ localStorage.removeItem('pam_session'); currentUser={email:null,role:null}; showLanding(); }
+    function handleLogout(){ goToLanding(); showNotification('Logged out','info'); }
+    function showNotification(msg,type='success'){ let n=document.getElementById('notification'); n.querySelector('#notificationText').innerText=msg; n.style.backgroundColor=type==='error'?'#c62828':'#2e7d32'; n.style.display='flex'; setTimeout(()=>n.style.display='none',3000); }
+    function runDemoGuide(){ alert("🔍 Demo Guide\n• Patient: login, submit application\n• Validator: review reports, AI income-based suggestions\n• Admin: see approved reports with 50% insurance split\n• Analyst: view KPIs & status charts\nAll data stored locally."); }
+    window.onload=()=>{ loadSession(); };
+    window.addEventListener('click',(e)=>{if(e.target.classList.contains('modal')) e.target.style.display='none';});
+</script>
+</body>
+</html>
