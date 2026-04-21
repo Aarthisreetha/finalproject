@@ -1,4 +1,4 @@
-from datetime import datetime, UTC
+from datetime import datetime, timezone
 
 from bson import ObjectId
 
@@ -22,8 +22,8 @@ def apply_decision(report_id: str, decision: str, reviewer_email: str):
         "stage": stage,
         "payment_status": "Approved" if stage == "approved" else "Rejected",
         "reviewed_by": reviewer_email,
-        "reviewed_at": datetime.now(UTC),
-        "updated_at": datetime.now(UTC),
+        "reviewed_at": datetime.now(timezone.utc),
+        "updated_at": datetime.now(timezone.utc),
     }
 
     db.validator_reports.update_one({"_id": report["_id"]}, {"$set": update_fields})
@@ -33,7 +33,7 @@ def apply_decision(report_id: str, decision: str, reviewer_email: str):
             "$set": {
                 "stage": stage,
                 "payment_status": update_fields["payment_status"],
-                "updated_at": datetime.now(UTC),
+                "updated_at": datetime.now(timezone.utc),
             }
         },
     )

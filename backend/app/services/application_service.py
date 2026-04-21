@@ -1,4 +1,4 @@
-from datetime import datetime, UTC
+from datetime import datetime, timezone
 
 from app.utils.db import get_db
 
@@ -14,7 +14,7 @@ def upsert_patient_application(email: str, payload: dict) -> dict:
     doc = {
         "patient_email": email,
         "name": payload.get("name", "Anonymous"),
-        "patient_id": payload.get("patient_id") or f"MCP{int(datetime.now(UTC).timestamp())}",
+        "patient_id": payload.get("patient_id") or f"MCP{int(datetime.now(timezone.utc).timestamp())}",
         "age": payload.get("age"),
         "diseases": payload.get("diseases"),
         "income": int(payload.get("income", 0)),
@@ -27,14 +27,14 @@ def upsert_patient_application(email: str, payload: dict) -> dict:
         },
         "stage": payload.get("stage", "submitted"),
         "payment_status": payload.get("payment_status", "Pending"),
-        "updated_at": datetime.now(UTC),
+        "updated_at": datetime.now(timezone.utc),
     }
 
     existing = db.applications.find_one({"patient_email": email})
     if existing:
         db.applications.update_one({"patient_email": email}, {"$set": doc})
     else:
-        doc["created_at"] = datetime.now(UTC)
+        doc["created_at"] = datetime.now(timezone.utc)
         db.applications.insert_one(doc)
 
     report_doc = {
@@ -49,7 +49,7 @@ def upsert_patient_application(email: str, payload: dict) -> dict:
         "bill": doc["bill"],
         "stage": doc["stage"],
         "validator_decision": None,
-        "updated_at": datetime.now(UTC),
+        "updated_at": datetime.now(timezone.utc),
     }
     db.validator_reports.update_one({"patient_email": email}, {"$set": report_doc}, upsert=True)
     return doc
