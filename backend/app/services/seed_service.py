@@ -1,4 +1,4 @@
-from datetime import datetime, UTC
+from datetime import datetime, timezone
 
 from app.utils.db import get_db
 
@@ -26,6 +26,6 @@ def seed_defaults() -> dict:
     for user in DEFAULT_USERS:
         existing = db.users.find_one({"email": user["email"]})
         if not existing:
-            db.users.insert_one({**user, "created_at": datetime.now(UTC)})
+            db.users.insert_one({**user, "created_at": datetime.now(timezone.utc)})
             created += 1
     return {"created_users": created, "total_default_users": len(DEFAULT_USERS)}
