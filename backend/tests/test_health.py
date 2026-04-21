@@ -143,3 +143,16 @@ def test_health(monkeypatch):
     res = client.get("/api/v1/health")
     assert res.status_code == 200
     assert res.json["status"] == "ok"
+
+
+def test_health_api_alias(monkeypatch):
+    from app.utils import db as db_mod
+
+    monkeypatch.setattr(db_mod, "MongoClient", lambda *_args, **_kwargs: MockClient())
+
+    app = create_app()
+    client = app.test_client()
+
+    res = client.get("/api/health")
+    assert res.status_code == 200
+    assert res.json["status"] == "ok"
